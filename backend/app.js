@@ -6,6 +6,7 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const connectToDb = require('./db/db');
 const userRouters=require("./routes/user.routes")
+const captainRouters=require("./routes/captain.routes");
 
 connectToDb();
 
@@ -15,12 +16,13 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
 
-app.use('./',(req,res)=>{
-    res.send('hello');
-})
+// app.use('/',(req,res)=>{
+//     res.send('hello');
+// })
 
 
 app.use("/users",userRouters);
+app.use("/captains",captainRouters);
 
 
 module.exports=app;
