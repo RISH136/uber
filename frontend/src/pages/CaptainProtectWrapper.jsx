@@ -17,6 +17,7 @@ const CaptainProtectWrapper =({
 
     useEffect(() => {
         if (!token) {
+            console.log("No token found");
             navigate('/captain-login')
         }
 
@@ -27,11 +28,12 @@ const CaptainProtectWrapper =({
     }).then(response=>{
         if(response.status===200){
             setCaptain(response.data.captain)
-            isLoading(false);
+            setisLoading(false);
         }
     }).catch(err=>{
         localStorage.removeItem("token");
-        navigate('/captains-login')
+        setisLoading(false);
+        navigate('/captain-login')
     })
     }, [ token ])
 
@@ -42,9 +44,6 @@ const CaptainProtectWrapper =({
             </div>
         )
     }
-
-    
-
 
     return (
         <>
