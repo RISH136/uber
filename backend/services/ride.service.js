@@ -10,8 +10,7 @@ function getOtp(num) {
     }
     return generateOtp(num);
 }
-
-async function getFair(pickUp,destination){
+async function getFare(pickUp,destination){
     if(!pickUp && !destination){
         throw new Error('PickUp and Destination are required');
     }
@@ -39,20 +38,23 @@ async function getFair(pickUp,destination){
     console.log(distanceTime);
 
     const fare={
-        auto: baseFare.auto + ((distanceTime.distance.value / 1000) * perKmRate.auto) + ((distanceTime.duration.value / 60) * perMinuteRate.auto),
-        car: baseFare.car + ((distanceTime.distance.value / 1000) * perKmRate.car) + ((distanceTime.duration.value / 60) * perMinuteRate.car),
-        moto: baseFare.moto + ((distanceTime.distance.value / 1000) * perKmRate.moto) + ((distanceTime.duration.value / 60) * perMinuteRate.moto)
+        auto: Math.round(baseFare.auto + ((distanceTime.distance.value / 1000) * perKmRate.auto) + ((distanceTime.duration.value / 60) * perMinuteRate.auto)),
+        car: Math.round(baseFare.car + ((distanceTime.distance.value / 1000) * perKmRate.car) + ((distanceTime.duration.value / 60) * perMinuteRate.car)),
+        moto: Math.round(baseFare.moto + ((distanceTime.distance.value / 1000) * perKmRate.moto) + ((distanceTime.duration.value / 60) * perMinuteRate.moto))
     }
+    console.log(fare);
 
     return fare;
 }
+
+module.exports.getFare=getFare;
 
 module.exports.createRide=async (user, pickUp, destination, vehicleType) =>{
     if (!user || !pickUp || !destination || !vehicleType) {
         throw new Error('User, PickUp, Destination and Vehicle Type are required');
     }
 
-    const fare = await getFair(pickUp, destination);
+    const fare = await getFare(pickUp, destination);
 
     console.log(fare);
 
@@ -66,8 +68,6 @@ module.exports.createRide=async (user, pickUp, destination, vehicleType) =>{
         destination,
         fare: fare[vehicleType],
         otp: getOtp(4),
-        status: 'pending',
-        captain: null
     });
 
     return ride;
